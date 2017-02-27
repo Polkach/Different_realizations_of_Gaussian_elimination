@@ -1,0 +1,2 @@
+all:
+	g++ hleb.cpp kolbasa.cpp kolbasa.h -lpthread -o a
