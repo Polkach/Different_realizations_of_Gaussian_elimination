@@ -1,0 +1,15 @@
+To compile:
+	mpic++ main.cpp -o #Name
+
+To run:
+	mpirun -n #Number_of_threads ./#Name #Programm`s_atributes
+
+For example:
+	mpic++ main.cpp -o a
+	mpirun -n 4 ./a -m 400
+
+-m		# To generate by formula
+-f		# To read from file
+400		# Size of matrix (when -m)
+matrix.txt	# File with matrix (when -f)
+-n		# To calculate the norm
