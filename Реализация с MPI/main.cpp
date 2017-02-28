@@ -304,15 +304,18 @@ int main(int argc, char * argv[])
     double endwtime;
     int t,j;
     unsigned int skolko=2,otkuda=4;
+    bool need_norm=false;
 
 //В этот раз обойдемся без случайной генерации матрицы
     for(i=1;i<argc;i++)
     {
         if(argv[i][0]=='-' && argv[i][1]=='m' && argv[i][2]=='\0') otkuda = 1;
         if(argv[i][0]=='-' && argv[i][1]=='f' && argv[i][2]=='\0') otkuda = 2;
+        if(argv[i][0]=='-' && argv[i][1]=='n' && argv[i][2]=='\0') need_norm = true;
     }
     if(otkuda==4) {cout<<"-m - generirovat` matricu po formule (nujen razmer, po umolchaniu - 2)" << endl
-        <<"-f - otkrit` iz faila (nujno nazvanie faila)" <<endl; return -1;}
+        <<"-f - otkrit` iz faila (nujno nazvanie faila)" <<endl
+        <<"-n - esli nujno schitat' normu" <<endl; return -1;}
     //cout << "Otkuda " << otkuda<<endl;
 
 //Каждый поток напишет, сколько всего потоков. Так сразу визуально продиагностируем, что все потоки работают
@@ -426,19 +429,25 @@ int main(int argc, char * argv[])
     //cout << endl << "Norma: " << nn << endl;
     }
 
-//Снова считываем оригинальную матрицу для подсчета нормы
-    Input(skolko, a, otkuda, argv[min(skolko,100*(otkuda-1)*otkuda)]);
-
-//Вычисляем норму
-    double nn = Norma(a,x,n);
-
-//Выводим на экран получившееся значение
-    if(me==0)
+//Если требуется, вычисляем норму
+    if(need_norm)
     {
-    //cout << endl << "Vrem`a raboti: " << (double)(endwtime-startwtime)<<" s" <<endl;
+    //Снова считываем оригинальную матрицу для подсчета нормы
+        Input(skolko, a, otkuda, argv[min(skolko,100*(otkuda-1)*otkuda)]);
 
-    cout << endl << "Norma: " << nn << endl;
+    //Вычисляем норму
+        double nn = Norma(a,x,n);
+
+    //Выводим на экран получившееся значение
+        if(me==0)
+        {
+        //cout << endl << "Vrem`a raboti: " << (double)(endwtime-startwtime)<<" s" <<endl;
+
+        cout << endl << "Norma: " << nn << endl;
+        }
     }
+
+//Чистим память
     for(i=0;i<n/num;i++) delete[]a[i];
     delete[]a;
     for(i=0;i<n/num;i++) delete[]x[i];
